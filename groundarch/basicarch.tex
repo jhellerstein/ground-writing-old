@@ -1,0 +1,115 @@
+\documentclass{article}
+
+\usepackage{times}
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{listings}
+\usepackage[T1]{fontenc} % fonts in T1 seem to look nicer, esp for listings
+\usepackage{txfonts}  % apparently needed to fixup the formatting of lstlistings
+\usepackage[protrusion=true,expansion=true]{microtype} % improves text layout
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{url}
+\usepackage{graphicx}
+
+% tldrs
+\usepackage{wrapfig}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\newenvironment{tldr}[1][r]
+  {\wrapfigure{#1}{0.33\textwidth}\tcolorbox}
+  {\endtcolorbox\endwrapfigure}
+
+\lstset{
+basicstyle=\ttfamily\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\ttfamily,      % the size of the fonts that are used for the line-numbers
+%aboveskip=0pt,
+%belowskip=0pt,
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+%numbersep=10pt,                  % how far the line-numbers are from the code
+breakindent=0pt,
+firstnumber=1,
+%backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=leftline,
+tabsize=2,  		% sets default tabsize to 2 spaces
+captionpos=b,   		% sets the caption-position to bottom
+breaklines=true,    	% sets automatic line breaking
+breakatwhitespace=true,    % sets if automatic breaks should only happen at whitespace
+columns=fixed,
+basewidth=0.52em,
+xleftmargin=6mm,
+xrightmargin=0mm,
+numberblanklines=false,
+language=Scala,
+escapeinside={(*}{*)}
+}
+% \lstset{
+% framexleftmargin=15pt,
+% basicstyle=\footnotesize
+% }
+
+\newcommand{\vml}{VML\xspace}
+
+\newcommand{\core}{core\xspace}
+\newcommand{\mantle}{mantle\xspace}
+\newcommand{\crust}{crust\xspace}
+\newcommand{\Core}{Core\xspace}
+\newcommand{\Mantle}{Mantle\xspace}
+\newcommand{\Crust}{Crust\xspace}
+
+\newcommand{\version}{\texttt{Version}\xspace}
+\newcommand{\richversion}{\texttt{RichVersion}\xspace}
+\newcommand{\thing}{\texttt{Thing}\xspace}
+\newcommand{\node}{\texttt{Node}\xspace}
+\newcommand{\edge}{\texttt{Edge}\xspace}
+\newcommand{\structure}{\texttt{Structure}\xspace}
+\newcommand{\graph}{\texttt{Graph}\xspace}
+\newcommand{\TVID}{\texttt{TVID}\xspace}
+\newcommand{\tag}{\texttt{Tag}\xspace}
+\newcommand{\uri}{\texttt{URI}\xspace}
+
+\newcommand{\versiongraph}{version graph\xspace}
+\newcommand{\modelgraph}{model graph\xspace}
+\newcommand{\lineagegraph}{lineage graph\xspace}
+\newcommand{\versiongraphs}{version graphs\xspace}
+\newcommand{\modelgraphs}{model graphs\xspace}
+\newcommand{\lineagegraphs}{lineage graphs\xspace}
+\newcommand{\groundwire}{GroundWire\xspace}
+
+
+\newcommand{\jmh}[1]{{\textcolor{red}{#1---jmh}}}
+\newcommand{\vikram}[1]{{\textcolor{blue}{#1---vikram}}}
+
+\newcommand{\eat}[1]{}
+
+\author{
+Joseph M. Hellerstein\\
+       {\scriptsize hellerstein@berkeley.edu}
+}
+\title{Facts on the Ground: A Status Report on the Ground Architecture}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\emph{Ground} is an open-source metadata service under development at UC Berkeley.  Ground is motivated by our experiences with users of open-source data processing packages like Spark, Hadoop and Jupyter, and the software vendors that provide tools and services in those ecosystems.  We have repeatedly heard requests in those communities for a flexible, vendor-neutral, open-source metadata service.  An overriding theme in these discussions is that the way we use data has changed philosphically and practically  in the last decade.  This makes the requirements for metadata services both more urgent and quite different than they were in previous generations.
+
+This document presents the architecture of Ground.
+\end{abstract}
+
+\section{Introduction}
+This document provides an overview of the basic architecture we envision for Ground.  
+
+\section{Ground Architecture}
+This section is taken from a larger document on the motivations and design for the Ground project.  Here we focus only on describing the basic architecture.
+\include{components}
+
+
+\bibliographystyle{abbrv}
+\bibliography{groundarch}
+\end{document}
