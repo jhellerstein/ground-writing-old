@@ -133,7 +133,7 @@ of revision history for individual objects and collections. Above the metadata g
 
 This document presents an early design of Common Ground that we are using in a prototype implementation.  We expect the metamodel to evolve---quickly at first as it hones onto a good ``fit'' with a range of use cases, but hopefuly relatively rarely thereafter.  The document will be updated periodically to track the evolution of the metamodel and its use.
 
-\begin{figure}
+\begin{figure}[th]
 \centering
 \includegraphics[width=0.75\linewidth]{layers.pdf}
 \caption{The three-layered \vml model.  The central layer shows {\node}s and {\edge}s.  
@@ -255,6 +255,28 @@ The \core is not exposed to above-Ground (user-level) services; it is the root o
 
 The next level of Ground, the \emph{\mantle}, presents the basic metamodel exposed above Ground: notably it defines {\node}s and {\edge}s that can be collected into {\graph}s for representing metadata.  All of these objects and collections inherit from \thing, and hence are versioned.   Scala traits for the Mantle are shown in Figure~\ref{fig:mantle}.
 
+The \mantle uses a graph abstraction for data modeling because graphs are very general, and can represent metadata for a variety of 
+data models.  Unstructured data models like JSON and XML 
+are very typically represented as flexible trees or graphs (Figure~\ref{fig:json}).  
+Structured data models like relational and entity-relationship can be represented as graphs as well, often
+with constraints on the shapes that the graphs can take on (Figure~\ref{fig:relational}).  Ground's \mantle allows diverse models
+of metadata to coexist in a single metadata store, and be integrated over time.
+\begin{figure}[ht]
+\centering
+\begin{minipage}{0.4\textwidth}
+\includegraphics[height=2in]{json.pdf}
+\caption{A JSON document represented as a graph.  Note the nesting of JSON objects (key-value collections) in a tree shape of oval nodes, and lists as chains of rectangular nodes.}
+\label{fig:json}
+\end{minipage}
+\hspace{0.1\textwidth}
+\begin{minipage}{0.4\textwidth}
+\includegraphics[height=2in]{relational.pdf}
+\caption{A relational database with two schemas, represented as a graph.  Note the fixed schemas$\rightarrow$tables$\rightarrow$columns structure, and
+the ad hoc foreign key references at the leaves.}
+\label{fig:relational}
+\end{minipage}
+\end{figure}
+
 The basic structure of the \mantle is defined by pairs of classes,
 which inherit from the \core's \thing and \version classes respectively.   As a
 naming convention, each subclass of \thing in the mantle has a corresponding
@@ -290,13 +312,12 @@ form of keys with optional typed values.  Like {\version}s, {\tag}s are also imm
 % We also allow {\tag}s to be associated with {\thing}s, 
 % enabling users to register immutable tags that apply to all versions of a \thing.  \jmh{Need to get 
 % this into the code.}  
-
 In addition to ad-hoc {\tag}s,
-{\version}s can be associated with structured information by referring to a
-\texttt{StructureVersion} object. {\structure}s provide a prescribed format for {\richversion}s to follow. 
-A \texttt{StructureVersion} consists of a set of key-type pairs.
-Each \version that references this \texttt{StructureVersion} must have {\tag}s with the corresponding 
-keys and types.
+we support structured information via a \structure, which is a descendant of \thing, and contains versions 
+in the form of \texttt{StructureVersion}s. {\structure}s provide a prescribed \emph{format}
+consisting of a set of key-type pairs; each \version that references a given \texttt{StructureVersion} 
+must have {\tag}s with the corresponding 
+keys and value types.
 
 
 \begin{tldr}
@@ -331,8 +352,8 @@ As mentioned above, the critical subclasses are \node and
 \texttt{NodeVersion}, \edge and \texttt{EdgeVersion} and \graph and
 \texttt{GraphVersion}.  The \node, \edge and \graph classes are very simple, containing
 no more information than the \thing superclass provides.  Likewise the 
-\texttt{NodeVersion} class contains the same information as the \richversion class, albeit in
-a publicly visible interface.
+\texttt{NodeVersion} class contains the same information as the \richversion class.
+%, albeit in a publicly visible interface.
 % However, both the
 % \texttt{NodeVersion} and \texttt{EdgeVersion} classes augment their \version
 % superclass with an optional reference to a \texttt{StructureVersion} (that we
@@ -393,31 +414,10 @@ optional \texttt{cachedValue}s, and parameters for accessing the
 reference (e.g., port, protocol, etc.) \texttt{ExternalThing}s have an \texttt{isUnchanging}
 flag, which, if enabled, is an indication that the external resource is expected to be
 immutable, and there should only be one \texttt{ExternalVersion} associated.
-Note that this is advisory; if the actual reference changes, Ground will not be aware.
-
-\begin{figure}
-\centering
-\begin{minipage}{0.4\textwidth}
-\includegraphics[height=2in]{json.pdf}
-\caption{A JSON document represented as a graph.  Note the nesting of JSON objects (key-value collections) in a tree shape of oval nodes, and lists as chains of rectangular nodes.}
-\label{fig:json}
-\end{minipage}
-\hspace{0.1\textwidth}
-\begin{minipage}{0.4\textwidth}
-\includegraphics[height=2in]{relational.pdf}
-\caption{A relational database with two schemas, represented as a graph.  Note the fixed schemas$\rightarrow$tables$\rightarrow$columns structure, and
-the ad hoc foreign key references at the leaves.}
-\label{fig:relational}
-\end{minipage}
-\end{figure}
-
-
-The \mantle uses a graph abstraction for data modeling because it is extremely general, and allows for metadata to be represented in a variety of 
-data models.  Unstructured data models like JSON and XML 
-are very typically represented as flexible trees or graphs (Figure~\ref{fig:json}).  
-Structured data models like relational and entity-relationship can be represented as graphs as well, often
-with constraints on the shapes that the graphs can take on (Figure~\ref{fig:relational}).  Ground's \mantle allows diverse models
-of metadata to coexist in a single metadata store, and be integrated over time.
+Note that this is advisory; if the actual reference changes, Ground will not be aware. 
+If the external item is mutable (i.e., not \texttt{isUnchanging}), API access to the \texttt{URI}
+of a \texttt{ExternalVersion} results in a new \texttt{ExternalVersion} being generated, containing an new
+\texttt{VersionID}, an updated timestamp and possibly an updated value. We refer to this as a \emph{Schr\"{o}dinger} versionining scheme for external data: each time we observe an ExternalVersion we change it.
 
 In summary, the \mantle provides a public, above-Ground interface for building application-specific 
 abstractions by customizing the optional and structured tags of nodes and edges, and laying them out in versioned graphs. 
@@ -435,7 +435,8 @@ abstractions by customizing the optional and structured tags of nodes and edges,
 \caption{\Crust metamodel in Scala.}
 \label{fig:crust}
 \end{figure}
-The goal of the \crust is to capture a \emph{provenance graph} in the form of
+The goal of the \crust is to capture usage information composed from the nodes and edges modeled in the mantle.  
+This usage is captured by \emph{provenance graphs} in the form of
 \texttt{LineageEdge}s.  To facilitate data lineage, Common Ground depends on
 a notion of \texttt{Principals} and \texttt{Workflow}s that we define first.  These
 are in some sense the first ``semantic'' objects in Common Ground; we believe they are fundamental
@@ -443,9 +444,9 @@ to any metadata system as parameters of provenance.
 
 \texttt{Principal}s are key concepts for capturing the actors that work with data, particularly in support of data governance. \texttt{Principal}s are
 the Common Ground representation for notions such as users, groups, and roles.
-\texttt{Principal}s are particularly important
-because they can be used in both auditing and
-in enforcement of policies like access control.
+% \texttt{Principal}s are particularly important in data governance
+% because they are central to both auditing and
+% enforcement of policies like access control.
 % Note that \texttt{Principal}s
 % are {\node}s, and built while access rights and group membership can be represented as {\edge}s.
 % {\structure}s would be particularly useful here because users would
@@ -453,13 +454,13 @@ in enforcement of policies like access control.
 % schemes being used. 
 \texttt{Principals} are integral to data lineage because
 they capture responsibility for creating, modifying and accessing data---supporting
-both in-line enforcement and off-line auditing of behavior.
+both in-line enforcement and off-line analysis of behavior.
 
 \begin{tldr}
 The purpose of the \crust is to capture semantic notions that are common across all use cases.  Currently this consists only of principals, workflows and the \lineagegraph of data dependencies.
 \end{tldr}
 
-The second concept that we believe is common is \emph{workflow specification}.
+The second semantic concept that we believe is common is \emph{workflow specification}.
 This sort of metadata is very important to Reproducibility and Usage tracking use cases.
 Workflows are representable in terms of the graph
 structure of the \mantle, but we believe they merit being
@@ -467,23 +468,22 @@ first-class citizens in the \crust of the Ground metamodel. These
 \texttt{Workflow}s,
 which are versioned, can explain what data was transformed, how it was
 transformed, and what the result of that transformation was. \texttt{Workflow}s
-can either be a sequence of \textit{ad hoc}, exploratory actions or a
-pre-defined set of actions.
+can capture a sequence of \textit{ad hoc}, exploratory actions or a
+pre-defined sequence of actions.
 
 Finally we are ready to define data lineage.  In Ground, lineage
 is captured as a relationship between two {\version}s, the second of which is derived from the
 first. This relationship is due to some process, either computational
 (workflows) or manual (via some principal). Basic \texttt{EdgeVersion}s as described
 in the \mantle cannot contain references, nor can they have other {EdgeVersion}s as endpoints.  
-So we introduce \texttt{LineageEdge}s, which are parameterized by the subclass of \richversion at their
-endpoints, and which contain 
+So we introduce \texttt{LineageEdge}s, which contain 
 optional references to \texttt{Workflow} and \texttt{Principal} nodes.
 
 \section{\groundwire: User-Defined Models Above Ground}
-The three layers of the Ground metamodel are intended to be common to all uses of the service.  We 
+The three layers of the Ground metamodel are intended to support a wide range of usage for the service.  We 
 showed Scala traits for this metamodel as a concrete example.  However, we expect users of the Ground
-service to interact with it via a language-agnostic REST API called \groundwire.  Users can define their own
-customization of the Ground metamodel by declaring custom {\node}s, {\edge}s, {\structure}s and {\tag}s.  
+service to interact with it via a language-agnostic API called \groundwire.  Users can define their own
+customization of the Ground metamodel by declaring custom {\structure}s and {\tag}s.  
 These can be packaged into libraries for common cases (e.g. a library for representing
 relational database catalogs, or a library for representing JSON documents).  These libraries can 
 be independent of each other, separately ``orbiting'' the unified Ground model.  
@@ -498,7 +498,7 @@ To that end, we intend to look at a number of use cases and make sure that each 
 \begin{itemize}
 \item \versiongraph use cases: git, Wikipedia edit history
 
-\item \modelgraph use cases: Hive Catalog, herd, Wikipedia?
+\item \modelgraph use cases: Hive Catalog, Herd, Wherehouse
 
 \item \lineagegraph use cases: Spark, Jupyter
 \end{itemize}
