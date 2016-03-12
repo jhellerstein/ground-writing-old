@@ -6,4 +6,4 @@
 *.d
 *.fls
 *.log
-*.pdf
+.DS_Store
