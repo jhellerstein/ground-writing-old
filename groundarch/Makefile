@@ -33,11 +33,11 @@ version		:= 2.2.0-rc2
 #
 # Note that the user-global version is imported *after* the source directory,
 # so that you can use stuff like ?= to get proper override behavior.
-.PHONY: Makefile GNUmakefile Makefile.ini $(HOME)/.latex-makefile/Makefile.ini
--include Makefile.ini
--include $(HOME)/.latex-makefile/Makefile.ini
+.PHONY: Makefile GNUmakefile Makefile.ini.txt $(HOME)/.latex-makefile/Makefile.ini.txt
+-include Makefile.ini.txt
+-include $(HOME)/.latex-makefile/Makefile.ini.txt
 #
-# This can be pdflatex or latex - you can change this by adding the following line to your Makefile.ini:
+# This can be pdflatex or latex - you can change this by adding the following line to your Makefile.ini.txt:
 # BUILD_STRATEGY := latex
 BUILD_STRATEGY		?= pdflatex
 #
@@ -79,7 +79,7 @@ export LC_ALL		?= C
 # to allow everything to be cleaned.
 #neverclean		?= *.pdf
 #
-# Alternatively (recommended), you can add those lines to a Makefile.ini file
+# Alternatively (recommended), you can add those lines to a Makefile.ini.txt file
 # and it will get picked up automatically without your having to edit this
 # Makefile.
 #
@@ -130,7 +130,7 @@ export LC_ALL		?= C
 # 	* Changed get-graphics to only accept a stem.
 # 	* Fixed build-once logic for scripted .tex to work better
 # 	* Made get-inputs sed script more maintainable.
-# 	* Moved Makefile.ini import up higher.
+# 	* Moved Makefile.ini.txt import up higher.
 # 	* Changed bare stems to not recursively invoke make
 # 	* Updated diff output to be more silent everywhere
 # 	* Added a MISSING comment to the .d file if stuff isn't found - forces
@@ -195,7 +195,7 @@ export LC_ALL		?= C
 # Chris Monson (2010-03-09):
 # 	* Bumped version to 2.2.0-alpha1 - major change!
 # 	* Support pdflatex natively and by default (issue 6 - a long time coming)
-# 	* Add ability to have a single $HOME/.latex-makefile/Makefile.ini for
+# 	* Add ability to have a single $HOME/.latex-makefile/Makefile.ini.txt for
 # 		all invocations
 # 	* Reworked graphic inclusion detection so that extensions need not be
 # 		specified for either build strategy (e.g.,
@@ -204,7 +204,7 @@ export LC_ALL		?= C
 # Chris Monson (2010-02-04):
 # 	* Bumped version to 2.1.43
 # 	* All of the following are for issue 63 (thanks to mojoh81):
-# 	* Added documentation about fixing Makefile.ini default target
+# 	* Added documentation about fixing Makefile.ini.txt default target
 # 	* Added perl and python script targets
 # 	* Fixed run logic to allow included .tex files to be scripted (the
 # 		run-again logic now detects missing .tex files, and the MV
@@ -251,7 +251,7 @@ export LC_ALL		?= C
 # Chris Monson (2009-10-21):
 # 	* Bumped version to 2.1.33
 # 	* Fixed issue 46, adding support for dot2tex (thanks to fdemesmay)
-# 	* Made all_files.* settable in Makefile.ini (using ?= instead of :=)
+# 	* Made all_files.* settable in Makefile.ini.txt (using ?= instead of :=)
 # 	* Fixed issue 47, thanks to fdemesmay: add binary copy directory, copy
 # 		dvi, pdf, and ps if it exists
 # Chris Monson (2009-09-25):
@@ -282,11 +282,11 @@ export LC_ALL		?= C
 # Chris Monson (2009-03-27):
 # 	* Bumped version to 2.1.25
 # 	* Cleaned up a bunch of variable setting stuff - more stuff is now
-# 		settable from Makefile.ini
+# 		settable from Makefile.ini.txt
 # 	* Cleaned up documentation for various features, especially settable
 # 		variables.
 # 	* issue 28: support for png -> eps conversion (it even looks good!)
-# 	* issue 29: support for "neverclean" files in Makefile.ini
+# 	* issue 29: support for "neverclean" files in Makefile.ini.txt
 # 	* issue 30: make ps2pdf14 the default - fall back when not there
 # Chris Monson (2009-03-09):
 # 	* Bumped version to 2.1.24
@@ -305,7 +305,7 @@ export LC_ALL		?= C
 # 	* Added ability to specify onlysources.* variables to indicate the only
 # 		files that should *not* be considered includes.  Thanks to Holger
 # 		<yllohy@googlemail.com> for this patch.
-# 	* Added an automatic include of Makefile.ini if it exists.  Allows
+# 	* Added an automatic include of Makefile.ini.txt if it exists.  Allows
 # 		settings to be made outside of this makefile.
 # Chris Monson (2008-05-21):
 # 	* Bumped version to 2.1.20
@@ -648,7 +648,7 @@ endef
 GNUPLOT_OUTPUT_EXTENSION	?= $(strip $(call determine-gnuplot-output-extension))
 
 # Directory into which we place "binaries" if it exists.
-# Note that this can be changed on the commandline or in Makefile.ini:
+# Note that this can be changed on the commandline or in Makefile.ini.txt:
 #
 # Command line:
 #   make BINARY_TARGET_DIR=$HOME/pdfs myfile.pdf
@@ -656,7 +656,7 @@ GNUPLOT_OUTPUT_EXTENSION	?= $(strip $(call determine-gnuplot-output-extension))
 # Also, you can specify a relative directory (relative to the Makefile):
 #   make BINARY_TARGET_DIR=pdfs myfile.pdf
 #
-# Or, you can use Makefile.ini:
+# Or, you can use Makefile.ini.txt:
 #
 #   BINARY_TARGET_DIR := $(HOME)/bin_out
 #
@@ -2853,7 +2853,7 @@ define help_text
 #
 # STANDARD AUXILIARY FILES:
 #
-#      Makefile.ini
+#      Makefile.ini.txt
 #
 #          This file can contain variable declarations that override various
 #          aspects of the makefile.  For example, one might specify
@@ -2879,7 +2879,7 @@ define help_text
 #
 #          Note that if you are not careful, you can override the default
 #          target (what happens when you type "make" without arguments), so if
-#          you do use Makefile.ini, you probably want to start it with
+#          you do use Makefile.ini.txt, you probably want to start it with
 #          something like the following line:
 #
 #          default: all
@@ -2888,7 +2888,7 @@ define help_text
 #          and the makefile already has a sensible "all" target, this will do
 #          what you want.
 #
-#          The Makefile.ini is imported before *anything else* is done, so go
+#          The Makefile.ini.txt is imported before *anything else* is done, so go
 #          wild with your ideas for changes to this makefile in there.  It
 #          makes it easy to test them before submitting patches.
 #
@@ -2938,7 +2938,7 @@ define help_text
 #
 #        If you wish to omit files without naming them with the special
 #        underscore names, set the following near the top of the Makefile,
-#        or (this is recommended) within a Makefile.ini in the same directory:
+#        or (this is recommended) within a Makefile.ini.txt in the same directory:
 #
 #        	includes.tex := file1.tex file2.tex
 #
@@ -2986,7 +2986,7 @@ define help_text
 #    clean:
 #        Remove ALL generated files, leaving only source intact.
 #        This will *always* skip files mentioned in the "neverclean" variable,
-#        either in this file or specified in Makefile.ini:
+#        either in this file or specified in Makefile.ini.txt:
 #
 #        	neverclean := *.pdf *.ps
 #
@@ -3088,7 +3088,7 @@ define help_text
 #
 #            latex -> dvips -> ps2pdf
 #
-#        The BUILD_STRATEGY can be overridden in Makefile.ini in the same
+#        The BUILD_STRATEGY can be overridden in Makefile.ini.txt in the same
 #        directory.  The default is pdflatex.
 #
 #        Reasons for using latex -> dvips include the "psfrag" package, and the
@@ -3155,7 +3155,7 @@ define help_text
 #        .ps, and .pdf) output files.
 #
 #        Alternatively, you can set the BINARY_TARGET_DIR variable, either as a
-#        make argument or in Makefile.ini, to point to your directory of
+#        make argument or in Makefile.ini.txt, to point to your directory of
 #        choice.  Note that no pathname wildcard expansion is done in the
 #        makefile, so make sure that the path is complete before going in
 #        there.  E.g., if you want to specify something in your home directory,
@@ -3356,7 +3356,7 @@ define help_text
 #            If you want, you can use the dot2tex program to convert dot files
 #            to tex graphics.  The default is to just call dot2tex with no
 #            arguments, but you can change the DOT2TEX definition to include
-#            options as needed (in your Makefile.ini).
+#            options as needed (in your Makefile.ini.txt).
 #
 #            Note that, as with pstex, the makefile cannot use latex's own
 #            output to discover all missing dot_t (output) files, since anytime

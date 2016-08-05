@@ -33,11 +33,11 @@ version		:= 2.2.0-rc2
 #
 # Note that the user-global version is imported *after* the source directory,
 # so that you can use stuff like ?= to get proper override behavior.
-.PHONY: Makefile GNUmakefile Makefile.ini $(HOME)/.latex-makefile/Makefile.ini
--include Makefile.ini
--include $(HOME)/.latex-makefile/Makefile.ini
+.PHONY: Makefile GNUmakefile Makefile.ini.txt $(HOME)/.latex-makefile/Makefile.ini.txt
+-include Makefile.ini.txt
+-include $(HOME)/.latex-makefile/Makefile.ini.txt
 #
-# This can be pdflatex or latex - you can change this by adding the following line to your Makefile.ini:
+# This can be pdflatex or latex - you can change this by adding the following line to your Makefile.ini.txt:
 # BUILD_STRATEGY := latex
 BUILD_STRATEGY		?= pdflatex
 #
@@ -79,7 +79,7 @@ export LC_ALL		?= C
 # to allow everything to be cleaned.
 #neverclean		?= *.pdf
 #
-# Alternatively (recommended), you can add those lines to a Makefile.ini file
+# Alternatively (recommended), you can add those lines to a Makefile.ini.txt file
 # and it will get picked up automatically without your having to edit this
 # Makefile.
 #
@@ -130,7 +130,7 @@ export LC_ALL		?= C
 # 	* Changed get-graphics to only accept a stem.
 # 	* Fixed build-once logic for scripted .tex to work better
 # 	* Made get-inputs sed script more maintainable.
-# 	* Moved Makefile.ini import up higher.
+# 	* Moved Makefile.ini.txt import up higher.
 # 	* Changed bare stems to not recursively invoke make
 # 	* Updated diff output to be more silent everywhere
 # 	* Added a MISSING comment to the .d file if stuff isn't found - forces
@@ -195,7 +195,7 @@ export LC_ALL		?= C
 # Chris Monson (2010-03-09):
 # 	* Bumped version to 2.2.0-alpha1 - major change!
 # 	* Support pdflatex natively and by default (issue 6 - a long time coming)
-# 	* Add ability to have a single $HOME/.latex-makefile/Makefile.ini for
+# 	* Add ability to have a single $HOME/.latex-makefile/Makefile.ini.txt for
 # 		all invocations
 # 	* Reworked graphic inclusion detection so that extensions need not be
 # 		specified for either build strategy (e.g.,
@@ -204,7 +204,7 @@ export LC_ALL		?= C
 # Chris Monson (2010-02-04):
 # 	* Bumped version to 2.1.43
 # 	* All of the following are for issue 63 (thanks to mojoh81):
-# 	* Added documentation about fixing Makefile.ini default target
+# 	* Added documentation about fixing Makefile.ini.txt default target
 # 	* Added perl and python script targets
 # 	* Fixed run logic to allow included .tex files to be scripted (the
 # 		run-again logic now detects missing .tex files, and the MV
@@ -251,7 +251,7 @@ export LC_ALL		?= C
 # Chris Monson (2009-10-21):
 # 	* Bumped version to 2.1.33
 # 	* Fixed issue 46, adding support for dot2tex (thanks to fdemesmay)
-# 	* Made all_files.* settable in Makefile.ini (using ?= instead of :=)
+# 	* Made all_files.* settable in Makefile.ini.txt (using ?= instead of :=)
 # 	* Fixed issue 47, thanks to fdemesmay: add binary copy directory, copy
 # 		dvi, pdf, and ps if it exists
 # Chris Monson (2009-09-25):
@@ -282,11 +282,11 @@ export LC_ALL		?= C
 # Chris Monson (2009-03-27):
 # 	* Bumped version to 2.1.25
 # 	* Cleaned up a bunch of variable setting stuff - more stuff is now
-# 		settable from Makefile.ini
+# 		settable from Makefile.ini.txt
 # 	* Cleaned up documentation for various features, especially settable
 # 		variables.
 # 	* issue 28: support for png -> eps conversion (it even looks good!)
-# 	* issue 29: support for "neverclean" files in Makefile.ini
+# 	* issue 29: support for "neverclean" files in Makefile.ini.txt
 # 	* issue 30: make ps2pdf14 the default - fall back when not there
 # Chris Monson (2009-03-09):
 # 	* Bumped version to 2.1.24
@@ -305,7 +305,7 @@ export LC_ALL		?= C
 # 	* Added ability to specify onlysources.* variables to indicate the only
 # 		files that should *not* be considered includes.  Thanks to Holger
 # 		<yllohy@googlemail.com> for this patch.
-# 	* Added an automatic include of Makefile.ini if it exists.  Allows
+# 	* Added an automatic include of Makefile.ini.txt if it exists.  Allows
 # 		settings to be made outside of this makefile.
 # Chris Monson (2008-05-21):
 # 	* Bumped version to 2.1.20
@@ -319,7 +319,7 @@ export LC_ALL		?= C
 # 	* Changed the pstex build hack to be on by default
 # Chris Monson (2008-04-09):
 # 	* Bumped version to 2.1.18
-# 	* issue 16: fixed pstex build problems, seems nondeterministic.  Added
+# 	* issue 16: fixed pstex build problems, seems nondeter.ini.txtstic.  Added
 # 		gratuitious hack for testing: set PSTEX_BUILD_ALL_HACK=1.
 # Chris Monson (2008-04-09):
 # 	* Bumped version to 2.1.17
@@ -431,7 +431,7 @@ export LC_ALL		?= C
 # 	* Bumped version to 2.0.0
 # 	* Removed clunky ability to create included .tex files from scripts
 # 	* Added note in the help about included tex scripting not working
-# 	* Fixed the .eps generation to delete %.gpihead.make when finished
+# 	* Fixed the .eps generation to delete %.gpihead.make when .ini.txtshed
 # 	* Abandoned designs to use shell variables to create sed scripts
 # 	* Abandoned __default__.tex.sh idea: it causes recursion with %: .
 # 	* Removed web page to-do.  All items are now complete.
@@ -648,7 +648,7 @@ endef
 GNUPLOT_OUTPUT_EXTENSION	?= $(strip $(call determine-gnuplot-output-extension))
 
 # Directory into which we place "binaries" if it exists.
-# Note that this can be changed on the commandline or in Makefile.ini:
+# Note that this can be changed on the commandline or in Makefile.ini.txt:
 #
 # Command line:
 #   make BINARY_TARGET_DIR=$HOME/pdfs myfile.pdf
@@ -656,7 +656,7 @@ GNUPLOT_OUTPUT_EXTENSION	?= $(strip $(call determine-gnuplot-output-extension))
 # Also, you can specify a relative directory (relative to the Makefile):
 #   make BINARY_TARGET_DIR=pdfs myfile.pdf
 #
-# Or, you can use Makefile.ini:
+# Or, you can use Makefile.ini.txt:
 #
 #   BINARY_TARGET_DIR := $(HOME)/bin_out
 #
@@ -719,7 +719,7 @@ endef
 GRAY	?= $(call get-default,$(GREY),)
 
 #
-# Utility Functions and Definitions
+# Utility Functions and De.ini.txttions
 #
 
 # While not exactly a make function, this vim macro is useful.  It takes a
@@ -836,7 +836,7 @@ space		:= $(empty) $(empty)
 colon		:= \:
 comma		:= ,
 
-# Useful shell definitions
+# Useful shell de.ini.txttions
 sh_true		:= :
 sh_false	:= ! :
 
@@ -867,7 +867,7 @@ else
 this_file	:= $(wildcard GNUmakefile makefile Makefile)
 endif
 
-# Terminal color definitions
+# Terminal color de.ini.txttions
 
 REAL_TPUT 	:= $(if $(NO_COLOR),,$(shell $(WHICH) $(TPUT)))
 
@@ -889,7 +889,7 @@ uline	:= $(call get-term-code,smul)
 reset	:= $(call get-term-code,sgr0)
 
 #
-# User-settable definitions
+# User-settable de.ini.txttions
 #
 LATEX_COLOR_WARNING	?= magenta
 LATEX_COLOR_ERROR	?= red
@@ -903,7 +903,7 @@ LATEX_COLOR_DEP		?= green
 LATEX_COLOR_SUCCESS	?= green bold
 LATEX_COLOR_FAILURE	?= red bold
 
-# Gets the real color from a simple textual definition like those above
+# Gets the real color from a simple textual de.ini.txttion like those above
 # $(call get-color,ALL_CAPS_COLOR_NAME)
 # e.g., $(call get-color,WARNING)
 get-color	= $(subst $(space),,$(foreach c,$(LATEX_COLOR_$1),$($c)))
@@ -976,7 +976,7 @@ all_files.jpg		?= $(wildcard *.jpg)
 all_files.eps.gz	?= $(wildcard *.eps.gz)
 all_files.eps		?= $(wildcard *.eps)
 
-# Utility function for obtaining all files not specified in $(neverclean)
+# Utility function for obt.ini.txtng all files not specified in $(neverclean)
 # $(call cleanable-files,file1 file2 file3 ...)
 # Returns the list of files that is not in $(wildcard $(neverclean))
 cleanable-files = $(filter-out $(wildcard $(neverclean)), $1)
@@ -1059,7 +1059,7 @@ default_files_scripts	:= $(call concat-files,tex.sh tex.pl tex.py rst,default)
 files_source	:= $(call concat-files,tex)
 files_scripts	:= $(call concat-files,tex.sh tex.pl tex.py rst)
 
-# Utility function for obtaining stems
+# Utility function for obt.ini.txtng stems
 # $(call get-stems,suffix,[prefix])
 get-stems	= $(sort $($(if $2,$2_,)files.$1:%.$1=%))
 
@@ -1113,7 +1113,7 @@ stems.eps.gz		:= $(call get-stems,eps.gz)
 # $(call concat-stems,suffixes,[prefix])
 concat-stems	= $(sort $(foreach s,$1,$($(if $2,$2_,)stems.$s)))
 
-# The most likely to be source but not finished product go first
+# The most likely to be source but not .ini.txtshed product go first
 graphic_source_extensions	:= fig \
 				   gpi \
 				   xvg \
@@ -1409,7 +1409,7 @@ endef
 # space, are only made of two paragraphs.  So, we just use some sed magic to
 # get everything into paragraphs, detect when it's a paragraph that interests
 # us, and double it up.  Then we get the filename only if we're missing
-# extensions (a sign that it's graphicx complaining).
+# extensions (a sign that it's graphicx compl.ini.txtng).
 #
 # $(call get-graphics,<target file stem>)
 #.log,$(addprefix $*.,d $(build_target_extension) _graphics)
@@ -1522,7 +1522,7 @@ endef
 # Outputs all bibliography files to stdout.  Arg 1 is the source stem, arg 2 is
 # a list of targets for each dependency found.
 #
-# The script kills all lines that do not contain bibdata.  Remaining lines have
+# The script kills all lines that do not contain bibdata.  Rem.ini.txtng lines have
 # the \bibdata macro and delimiters removed to create a dependency list.  A
 # trailing comma is added, then all adjacent commas are collapsed into a single
 # comma.  Then commas are replaced with the string .bib[space], and the
@@ -1576,7 +1576,7 @@ endef
 
 # Parse .gpi files for data and loaded dependencies, output to stdout
 #
-# The sed script here tries to be clever about obtaining valid
+# The sed script here tries to be clever about obt.ini.txtng valid
 # filenames from the gpi file.  It assumes that the plot command starts its own
 # line, which is not too difficult a constraint to satisfy.
 #
@@ -1803,7 +1803,7 @@ endef
 # 	and blank it out to trigger end-of-paragraph logic below.
 # 3) When encountering a blank line (LaTeX output helpfully breaks output on
 # 	newlines)
-# 	a) swap the hold buffer (containing the paragraph) into the pattern buffer (putting a blank line into the hold buffer),
+# 	a) swap the hold buffer (cont.ini.txtng the paragraph) into the pattern buffer (putting a blank line into the hold buffer),
 # 	b) remove the newline at the beginning (don't ask),
 # 	c) apply any colorizing substitutions necessary to ensure happiness.
 # 	d) get the newline out of the hold buffer and append it
@@ -2036,7 +2036,7 @@ convert-epsgz	= $(GUNZIP) -c '$1' $(if $3,| $(call kill-ps-color)) > '$2'
 # $(call convert-eps,<in file>,<out file>,[gray])
 convert-eps	= $(if $3,$(call kill-ps-color) $1 > $2)
 
-# The name of the file containing special postscript commands for grayscale
+# The name of the file cont.ini.txtng special postscript commands for grayscale
 gray_eps_file	:= gray.eps.make
 
 # Changes sethsbcolor and setrgbcolor calls in postscript to always produce
@@ -2371,7 +2371,7 @@ endif
 # Build the .bbl file.  When dependencies are included, this will (or will
 # not!) depend on something.bib, which we detect, acting accordingly.  The
 # dependency creation also produces the %.auxbbl.make file.  BibTeX is a bit
-# finicky about what you call the actual files, but we can rest assured that if
+# .ini.txtcky about what you call the actual files, but we can rest assured that if
 # a .auxbbl.make file exists, then the .aux file does, as well.  The
 # .auxbbl.make file is a cookie indicating whether the .bbl needs to be
 # rewritten.  It only changes if the .aux file changes in ways relevant to .bbl
@@ -2558,7 +2558,7 @@ endif
 #	Note that if some of the dependencies are discovered because they turn
 #	up missing in the log file, we really need the .d file to be reloaded.
 #	Adding a sleep command helps with this.  Otherwise make is extremely
-#	nondeterministic, sometimes working, sometimes not.
+#	nondeter.ini.txtstic, sometimes working, sometimes not.
 #
 #	Usually we can force this by simply removing the generated pdf file and
 #	not creating a .1st.make file..
@@ -2853,7 +2853,7 @@ define help_text
 #
 # STANDARD AUXILIARY FILES:
 #
-#      Makefile.ini
+#      Makefile.ini.txt
 #
 #          This file can contain variable declarations that override various
 #          aspects of the makefile.  For example, one might specify
@@ -2879,7 +2879,7 @@ define help_text
 #
 #          Note that if you are not careful, you can override the default
 #          target (what happens when you type "make" without arguments), so if
-#          you do use Makefile.ini, you probably want to start it with
+#          you do use Makefile.ini.txt, you probably want to start it with
 #          something like the following line:
 #
 #          default: all
@@ -2888,7 +2888,7 @@ define help_text
 #          and the makefile already has a sensible "all" target, this will do
 #          what you want.
 #
-#          The Makefile.ini is imported before *anything else* is done, so go
+#          The Makefile.ini.txt is imported before *anything else* is done, so go
 #          wild with your ideas for changes to this makefile in there.  It
 #          makes it easy to test them before submitting patches.
 #
@@ -2938,7 +2938,7 @@ define help_text
 #
 #        If you wish to omit files without naming them with the special
 #        underscore names, set the following near the top of the Makefile,
-#        or (this is recommended) within a Makefile.ini in the same directory:
+#        or (this is recommended) within a Makefile.ini.txt in the same directory:
 #
 #        	includes.tex := file1.tex file2.tex
 #
@@ -2986,7 +2986,7 @@ define help_text
 #    clean:
 #        Remove ALL generated files, leaving only source intact.
 #        This will *always* skip files mentioned in the "neverclean" variable,
-#        either in this file or specified in Makefile.ini:
+#        either in this file or specified in Makefile.ini.txt:
 #
 #        	neverclean := *.pdf *.ps
 #
@@ -3055,7 +3055,7 @@ define help_text
 #
 #    _sources:
 #        Print out a list of all compilable sources in this directory.  This is
-#        useful for determining what make thinks it will be using as the
+#        useful for deter.ini.txtng what make thinks it will be using as the
 #        primary source for 'make all'.
 #
 #    _scripts:
@@ -3088,7 +3088,7 @@ define help_text
 #
 #            latex -> dvips -> ps2pdf
 #
-#        The BUILD_STRATEGY can be overridden in Makefile.ini in the same
+#        The BUILD_STRATEGY can be overridden in Makefile.ini.txt in the same
 #        directory.  The default is pdflatex.
 #
 #        Reasons for using latex -> dvips include the "psfrag" package, and the
@@ -3155,7 +3155,7 @@ define help_text
 #        .ps, and .pdf) output files.
 #
 #        Alternatively, you can set the BINARY_TARGET_DIR variable, either as a
-#        make argument or in Makefile.ini, to point to your directory of
+#        make argument or in Makefile.ini.txt, to point to your directory of
 #        choice.  Note that no pathname wildcard expansion is done in the
 #        makefile, so make sure that the path is complete before going in
 #        there.  E.g., if you want to specify something in your home directory,
@@ -3296,7 +3296,7 @@ define help_text
 #        When creating a .gpi file, DO NOT INCLUDE the "set terminal" or "set
 #        output" commands!  The makefile will include terminal information for
 #        you.  Besides being unnecessary and potentially harmful, including the
-#        terminal definition in the .gpi file makes it harder for you, the one
+#        terminal de.ini.txttion in the .gpi file makes it harder for you, the one
 #        writing the document, to preview your graphics, e.g., with
 #
 #           gnuplot -persist myfile.gpi
@@ -3355,8 +3355,8 @@ define help_text
 #
 #            If you want, you can use the dot2tex program to convert dot files
 #            to tex graphics.  The default is to just call dot2tex with no
-#            arguments, but you can change the DOT2TEX definition to include
-#            options as needed (in your Makefile.ini).
+#            arguments, but you can change the DOT2TEX de.ini.txttion to include
+#            options as needed (in your Makefile.ini.txt).
 #
 #            Note that, as with pstex, the makefile cannot use latex's own
 #            output to discover all missing dot_t (output) files, since anytime
